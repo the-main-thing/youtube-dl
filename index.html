@@ -48,11 +48,11 @@
 	</head>
 	<body>
 		<div>
-      <h1>Version 1.0.0</h1>
+			<h1>Version 1.0.0</h1>
 			<form id="form" action="/download" method="post">
 				<p id="error"></p>
-				<input type="url" name="url" placeholder="Введите ссылку на видео" />
-				<button type="submit">Скачать</button>
+				<input id="url-input" type="url" name="url" placeholder="Введите ссылку на видео" />
+        <button onClick="download()" type="submit">Скачать</button>
 			</form>
 			<div style="max-width: 50vw; margin: 0 auto">
 				<code id="log"></code>
@@ -62,22 +62,25 @@
 			const ws = new WebSocket('ws://localhost:4269/ws')
 			ws.onmessage = function (event) {
 				log.innerHTML += event.data
-        log.scrollIntoView({ behavior: 'smooth', block: 'end' })
+				log.scrollIntoView({ behavior: 'smooth', block: 'end' })
 			}
-      ws.onerror = function (event) {
-        window.location.reload()
-      }
-			form.onsubmit = function (event) {
-				event.preventDefault()
+			ws.onerror = function (event) {
+				window.location.reload()
+			}
+			function download() {
 				try {
 					error.innerHTML = ''
 					log.innerHTML = ''
-					const url = new URL(new FormData(form).get('url'))
+					const url = new URL(urlInput.value)
 					ws.send(url.toString())
 				} catch {
 					error.innerHTML = 'Неправильный URL'
 				}
-        return false
+			}
+			form.onsubmit = function (event) {
+				event.preventDefault()
+        download()
+				return false
 			}
 		</script>
 	</body>
