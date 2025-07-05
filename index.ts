@@ -54,11 +54,14 @@ Bun.serve({
 			if (typeof message !== 'string') {
 				return
 			}
-			const exitCode = await download((msg) => ws.send('<br>' + msg), message)
+			const exitCode = await download(
+				(msg) => ws.send('<br>' + msg),
+				message,
+			)
 			if (exitCode) {
-				ws.send('<br>Мам, готово, смотри в папке Youtube')
-			} else {
 				ws.send('<br>Какая-то ошибка, сфоткай экран, покежь')
+			} else {
+				ws.send('<br>Мам, готово, смотри в папке Youtube')
 			}
 		},
 	},
